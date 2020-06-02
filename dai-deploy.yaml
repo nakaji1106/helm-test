@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dai-dep
+  labels:
+   app: dai-dep
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: dai-dep
+  template:
+    metadata:
+      labels:
+        app: dai-dep
+    spec:
+      containers:
+       - name: dai-dep
+         image: bastion.test.example.local:5000/dai-test/dai-centos7-ppc64le:1.8.6.3-cuda10.0.43
+         imagePullPolicy: IfNotPresent
+         ports:
+         - containerPort: 12345
+         volumeMounts:
+         - name: dai-data
+           mountPath: /data
+         - name: dai-log
+           mountPath: /log
+         - name: dai-license
+           mountPath: /license
+         - name: dai-tmp
+           mountPath: /tmp
+         env:
+         - name: DAI_APP_LANGUAGE
+           value: "ja"  
+      volumes:
+       - name: dai-data
+         emptyDir: {}
+       - name: dai-log
+         emptyDir: {}
+       - name: dai-license
+         emptyDir: {}
+       - name: dai-tmp
+         emptyDir: {}
